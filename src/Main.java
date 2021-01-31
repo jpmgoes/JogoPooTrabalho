@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class Main {
     static void mostrandoCompetidores(ArrayList<Personagem> competidores){
         if (competidores.size() == 0) {
@@ -8,6 +7,20 @@ public class Main {
         }
         for(Personagem p : competidores)
             System.out.println(p.getNome());
+    }
+    static ArrayList<Personagem> removerPersonagem(ArrayList<Personagem> competidores, String nome) {
+        ArrayList<String> arrNome = competidoresNome(competidores);
+        if (!arrNome.contains(nome)){
+            System.out.println("Não existe Competidor com esse nome");
+            return competidores;
+        }
+        int index = arrNome.indexOf(nome);
+        ArrayList<Personagem> arrCompetidores = new ArrayList<>();
+        for (int i = 0; i < competidores.size(); i++)
+            if(i != index)
+                arrCompetidores.add(competidores.get(i));
+
+        return arrCompetidores;
     }
     static ArrayList<String> competidoresNome(ArrayList<Personagem> competidores){
         ArrayList<String> arrNomes = new ArrayList<>();
@@ -38,21 +51,22 @@ public class Main {
         return arrSort;
     }
     static void vezFazer(Personagem vezDo, ArrayList<Personagem> selecionados, int round){
-        System.out.println("O que você quer fazer?");
-        System.out.println("Digite:");
-        System.out.println("1 - Atacar\n" +
-                           "2 - Defender\n" +
-                           "3 - PowerUP\n" +
-                           "4 - Mostrar Inventário\n" +
-                           "5 - Usar Item\n" +
-                           "6 - Ver Status\n" +
-                           "7 - Pular Vez");
-        if(vezDo.getAtributos()[4] >=50) System.out.println("8 - Ataque Especial");
         boolean bool = true;
         while (bool){
+            System.out.println("O que você quer fazer?");
+            System.out.println("Digite:");
+            System.out.println("1 - Atacar\n" +
+                    "2 - Defender\n" +
+                    "3 - PowerUP\n" +
+                    "4 - " + vezDo.getSpecialSkill()+"\n"+
+                    "5 - Mostrar Inventário\n" +
+                    "6 - Usar Item\n" +
+                    "7 - Ver Status\n" +
+                    "8 - Pular Vez");
+            if(vezDo.getAtributos()[4] >=50) System.out.println("9 - Ataque Especial");
             try{
                 int input = new Scanner(System.in).nextInt();
-                if (input == 8){
+                if (input == 9 && vezDo.getAtributos()[4] >= 50){
                     System.out.println("Todos os Atuais Selecionados");
                     mostrandoCompetidores(selecionados);
                     System.out.println("Quem você quer atacar?");
@@ -91,17 +105,23 @@ public class Main {
                         vezDo.powerUP();
                         return;
                     case 4:
-                        vezDo.mostrarInventario();
-                        break;
+                        System.out.println("A skill da "+vezDo.getClass()+" foi ativada:");
+                        System.out.println(vezDo.getSpecialSkill());
+                        vezDo.ativarSkill();
+                        return;
                     case 5:
                         vezDo.mostrarInventario();
+                        break;
+                    case 6:
+                        vezDo.mostrarInventario();
+                        ArrayList<String> arrPocoesName = pocoesNome(vezDo.getInventario());
+                        if (arrPocoesName.size() == 0) continue;
                         System.out.println("Escreva o nome do Item que deseja usar.");
                         ArrayList<String> arrItensNomes = new ArrayList<>(Arrays.asList(
                                 "Heal", "Shield", "Strength", "Mana"));
                         boolean loop = false;
                         do {
                             String item = new Scanner(System.in).next();
-                            ArrayList<String> arrPocoesName = pocoesNome(vezDo.getInventario());
                             if (!arrItensNomes.contains(item)) {
                                 System.out.println("Digite o nome Correto!");
                                 loop = true;
@@ -117,10 +137,10 @@ public class Main {
                             }
                         }while (loop);
                         break;
-                    case 6:
-                        System.out.println(vezDo.info());
-                        break;
                     case 7:
+                        System.out.print(vezDo.info());
+                        break;
+                    case 8:
                         System.out.println("Você Pulou a vez");
                         return;
                     default:
@@ -148,13 +168,17 @@ public class Main {
             selecionados = deadFilter(selecionados);
             round++;
         }
-        System.out.println("O ganhador é o Competidor: "+selecionados.get(0));
+        System.out.println("++++++++++++++++++++++++++++++++++");
+        System.out.println("O ganhador é o Competidor: "+selecionados.get(0).getNome());
+        System.out.println("++++++++++++++++++++++++++++++++++");
         System.out.println(selecionados.get(0).info());
     }
     static ArrayList<Personagem> selecionar(ArrayList<Personagem> competidores){
         ArrayList<Personagem> selecionados = new ArrayList<>();
         ArrayList<String> arrNomes = competidoresNome(competidores);
         while (true){
+            System.out.println("Lista dos Competidores:");
+            mostrandoCompetidores(competidores);
             ArrayList<String> arrNomesSelecionados = competidoresNome(selecionados);
             System.out.println("Selecione os Personagens");
             String nome = new Scanner(System.in).next();
@@ -279,8 +303,9 @@ public class Main {
                                "2 - Criar Personagens\n" +
                                "3 - Editar Personagens\n" +
                                "4 - Mostrar Competidores\n" +
-                               "5 - Salvar Jogo\n" +
-                               "6 - Carregar Jogo Salvo");
+                               "5 - Remover Competidor\n"+
+                               "6 - Salvar Jogo\n" +
+                               "7 - Carregar Jogo Salvo");
             try {
                 int s = new Scanner(System.in).nextInt();
                 switch (s){
@@ -305,6 +330,16 @@ public class Main {
                         mostrandoCompetidores(competidores);
                         break;
                     case 5:
+                        if (competidores.size() == 0){
+                            System.out.println("Ainda não foram adicionados Competidores!");
+                            continue;
+                        }
+                        System.out.println("Lista de Todos os Competidores");
+                        mostrandoCompetidores(competidores);
+                        System.out.println("Digite o nome daquele que você quer remover:");
+                        String nome = new Scanner(System.in).next();
+                        competidores = removerPersonagem(competidores, nome);
+                        attCompetidores(competidores);
                         break;
                     case 6:
                         break;

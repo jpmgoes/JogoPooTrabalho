@@ -6,8 +6,11 @@ public class Guerreiro extends Personagem{
         super(nome);
         setAtributos(this.arr);
         setPower(this.power);
+        specialSkill = "Melhorar Shield";
     }
-    void melhorarShield(){
+
+    @Override
+    void ativarSkill() {
         getAtributos()[1] += 10;
     }
 }

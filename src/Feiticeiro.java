@@ -6,8 +6,12 @@ public class Feiticeiro extends Personagem{
         super(nome);
         setAtributos(this.arr);
         setPower(this.power);
+        specialSkill = "Aumentar Mana";
+
     }
-    void aumentarMana(){
+
+    @Override
+    void ativarSkill() {
         getAtributos()[4] += 20;
     }
 }

@@ -7,6 +7,7 @@ public abstract class Personagem {
     private int[] atributos = {0, 0, 0, 0, 0, 0 }; // vida, escudo, ataque , defesa, mana, powerUP
     private int[] atributosClone = {0, 0, 0, 0, 0, 0};
     private double power;
+    protected String specialSkill;
     private boolean defender = false;
     private ArrayList<Pocoes> inventario = new ArrayList<>();
     private ArrayList<String> competidores = new ArrayList<>();
@@ -46,7 +47,9 @@ public abstract class Personagem {
             if (random < 3) inventario.add(arrP[random]);
         }
         if(p.getAtributos()[0] <= 0) {
+            System.out.println("≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥");
             System.out.println(p.getNome()+" Morreu!");
+            System.out.println("≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥");
             p.getAtributos()[0] = 0;
         }
         cloneArray();
@@ -73,6 +76,8 @@ public abstract class Personagem {
     void powerUP(){
         this.atributos[2] *= getPower();
         System.out.println("PowerUP!!");
+        System.out.println("Aumento de "+getAtributos()[5]+"% do ataque");
+        System.out.println("Atualmente com "+getAtributos()[2]+" de ataque");
     }
 
     private void cloneArray(){
@@ -155,6 +160,7 @@ public abstract class Personagem {
         }
     }
 
+    abstract void ativarSkill();
     // get
     public String getNome() {
         return nome;
@@ -177,6 +183,10 @@ public abstract class Personagem {
     public double getPower() {
         return power;
     }
+    public String getSpecialSkill() {
+        return specialSkill;
+    }
+
     // set
     public void setAtributos(int[] atributos) {
         this.atributos = atributos;

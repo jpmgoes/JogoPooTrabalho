@@ -6,8 +6,11 @@ public class Arqueiro extends Personagem{
         super(nome);
         setAtributos(this.arr);
         setPower(this.power);
+        specialSkill = "Aumentar Vida";
     }
-    void aumentarVida(){
+
+    @Override
+    void ativarSkill() {
         if (getAtributos()[0] == 0) return;
         getAtributos()[0] += 15;
     }
