@@ -7,10 +7,9 @@ public abstract class Personagem {
     private int[] atributos = {0, 0, 0, 0, 0, 0 }; // vida, escudo, ataque , defesa, mana, powerUP
     private int[] atributosClone = {0, 0, 0, 0, 0, 0};
     private double power;
-    private boolean vez = false;
     private boolean defender = false;
     private ArrayList<Pocoes> inventario = new ArrayList<>();
-    private ArrayList<Personagem> competidores = new ArrayList<>();
+    private ArrayList<String> competidores = new ArrayList<>();
 
     public Personagem(String nome) {
         this.nome = nome;
@@ -30,13 +29,13 @@ public abstract class Personagem {
                 System.out.println("BAKURETSU MAHOU - EXPLOOOOSIOON");
             }
             int dano =  2 * getAtributos()[2];
+            System.out.println(getNome()+" deu "+dano+" de dano no "+p.getNome());
             atk(p, dano);
         }
         else System.out.println("Seu ataque não foi efetivo");
-        encerrarVez();
     }
 
-    void atk(Personagem p, int dano){
+    private void atk(Personagem p, int dano){
         if(p.getAtributos()[1] > 0) p.getAtributos()[1] -= dano;
         else p.getAtributos()[0] -= dano;
         if (p.getAtributos()[1] < 0) {
@@ -46,7 +45,12 @@ public abstract class Personagem {
             Pocoes[] arrP = {new Shield(), new Heal(), new Strength(), new Mana()};
             if (random < 3) inventario.add(arrP[random]);
         }
-        if(p.getAtributos()[0] < 0) p.getAtributos()[0] = 0;
+        if(p.getAtributos()[0] <= 0) {
+            System.out.println(p.getNome()+" Morreu!");
+            p.getAtributos()[0] = 0;
+        }
+        cloneArray();
+        this.atributos = this.atributosClone;
     }
 
     String info() {
@@ -66,33 +70,16 @@ public abstract class Personagem {
                 "PowerUP: "+getAtributos()[5]+"%\n");
     }
 
-    void editarNome(String nome){
-        ArrayList<String> arrNomes = new ArrayList<>();
-        for (Personagem p:getCompetidores())
-            arrNomes.add(p.getNome());
-        if(arrNomes.contains(nome)){
-            System.out.println("Esse nome já foi usado!");
-            return;
-        };
-        setNome(nome);
-    }
-
-    void attCompetidores(ArrayList<Personagem> competidores){
-        this.competidores = competidores;
-    }
-
     void powerUP(){
-        cloneArray();
         this.atributos[2] *= getPower();
         System.out.println("PowerUP!!");
-        System.out.println(this.atributos[2]+" ----------");
-        encerrarVez();
     }
 
-    void cloneArray(){
+    private void cloneArray(){
         for (int i = 0; i < this.atributos.length;i++)
             this.atributosClone[i] = getAtributos()[i];
-        if(this instanceof Guerreiro) this.atributosClone[2]= 16;
+
+        if(this instanceof Guerreiro) this.atributosClone[2]= 30;
         else if (this instanceof Arqueiro) this.atributosClone[2] = 32;
         else this.atributosClone[2] = 26;
     }
@@ -100,6 +87,7 @@ public abstract class Personagem {
     void atacar(Personagem p, int rodada) {
         if(p.isDefender()) {
             System.out.println(p.getNome()+" defendeu o ataque!!");
+            p.setDefender(false);
             return;
         }
         int ataque = getAtributos()[2];
@@ -107,24 +95,20 @@ public abstract class Personagem {
             float critico = new Random().nextFloat();
             ataque += critico*10;
             System.out.println("Critical!!!");
-            System.out.println(ataque);
         }
 
         int dano = ataque - autoDefender(ataque);
         atk(p, dano);
 
         System.out.println(getNome()+" deu "+dano+" de dano no "+p.getNome());
-        cloneArray();
 
-        encerrarVez();
     }
 
     void defender(){
         this.defender = true;
-        encerrarVez();
     }
 
-    int autoDefender(int ataque){
+    private int autoDefender(int ataque){
         return (getAtributos()[3]*ataque)/20;
     }
 
@@ -138,6 +122,10 @@ public abstract class Personagem {
             if (p.getName() == "Strength") arrQnt[2]++;
             if (p.getName() == "Mana") arrQnt[3]++;
         }
+        if(Arrays.stream(arrQnt).sum() == 0) {
+            System.out.println("Você não tem item!");
+            return;
+        }
         System.out.println(getNome()+ " tem:");
         int i = 0;
         for (String s:arrNomes){
@@ -147,7 +135,7 @@ public abstract class Personagem {
         }
     }
 
-    ArrayList<Pocoes> removeItem(ArrayList<Pocoes> p, int index){
+    private ArrayList<Pocoes> removeItem(ArrayList<Pocoes> p, int index){
         ArrayList<Pocoes> arr = new ArrayList<>();
         for (int i = 0; i < p.size(); i++) {
             if (index == i) continue;
@@ -165,18 +153,13 @@ public abstract class Personagem {
                 break;
             };
         }
-        encerrarVez();
-    }
-
-    void encerrarVez(){
-        this.vez = false;
     }
 
     // get
     public String getNome() {
         return nome;
     }
-    public ArrayList<Personagem> getCompetidores() {
+    public ArrayList<String> getCompetidores() {
         return competidores;
     }
     public int[] getAtributos() {
@@ -184,9 +167,6 @@ public abstract class Personagem {
     }
     public int[] getAtributosClone() {
         return atributosClone;
-    }
-    public boolean isVez() {
-        return vez;
     }
     public boolean isDefender() {
         return defender;
@@ -197,7 +177,6 @@ public abstract class Personagem {
     public double getPower() {
         return power;
     }
-
     // set
     public void setAtributos(int[] atributos) {
         this.atributos = atributos;
@@ -210,5 +189,11 @@ public abstract class Personagem {
     }
     public void setPower(double power) {
         this.power = power;
+    }
+    public void setDefender(boolean defender) {
+        this.defender = defender;
+    }
+    public void setCompetidores(ArrayList<String> competidores) {
+        this.competidores = competidores;
     }
 }
