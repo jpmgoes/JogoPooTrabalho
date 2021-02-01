@@ -342,7 +342,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-    static ArrayList<Personagem> carregarSave() throws FileNotFoundException {
+    static ArrayList<Personagem> carregarSave(ArrayList<Personagem> competidoresPadrao) throws FileNotFoundException {
         ArrayList<Personagem> competidores = new ArrayList<>();
         try{
             FileReader fr = new FileReader("save.txt");
@@ -360,12 +360,13 @@ public class Main {
             br.close();
             fr.close();
             System.out.println("Save foi Carregado");
+            return competidores;
         }catch (FileNotFoundException e){
             System.out.println("Não há save!");
         }catch (IOException e){
             System.out.println("Erro na leitura do Save");
         }
-        return competidores;
+        return competidoresPadrao;
     }
     static void menu(){
         boolean bool = true;
@@ -421,7 +422,7 @@ public class Main {
                         break;
                     case 7:
                         System.out.println("Loading...");
-                        competidores = carregarSave();
+                        competidores = carregarSave(competidores);
                         attCompetidores(competidores);
                         break;
                     case 8:
@@ -438,6 +439,7 @@ public class Main {
             }
         }
     }
+
     public static void main(String[] args) throws IOException {
         System.out.println("OBS: Os Personagens Mortos, como morreram não podem mais participar!");
         menu();

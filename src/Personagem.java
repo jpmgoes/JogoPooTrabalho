@@ -5,7 +5,7 @@ import java.util.Random;
 public abstract class Personagem {
     private String nome;
     private int[] atributos = {0, 0, 0, 0, 0, 0 }; // vida, escudo, ataque , defesa, mana, powerUP
-    private int[] atributosClone = {0, 0, 0, 0, 0, 0};
+    private int[] atributosClone = {0, 0, 0, 0, 0, 0}; // vida, escudo, ataque , defesa, mana, powerUP
     protected int[] atributosRecover;
     private double power;
     protected String specialSkill;
@@ -74,7 +74,7 @@ public abstract class Personagem {
                 "Ataque: "+getAtributos()[2]+"\n"+
                 "Defesa: "+getAtributos()[3]+"\n"+
                 "Mana: "+getAtributos()[4]+"\n"+
-                "PowerUP: "+getAtributos()[5]+"%\n");
+                "PowerUP: "+getAtributos()[5]+"%");
     }
 
     void powerUP(){
@@ -88,7 +88,7 @@ public abstract class Personagem {
         for (int i = 0; i < this.atributos.length;i++)
             this.atributosClone[i] = getAtributos()[i];
 
-        if(this instanceof Guerreiro) this.atributosClone[2]= 30;
+        if(this instanceof Guerreiro) this.atributosClone[2]= 30; // ataque
         else if (this instanceof Arqueiro) this.atributosClone[2] = 32;
         else this.atributosClone[2] = 26;
     }
@@ -165,6 +165,7 @@ public abstract class Personagem {
     }
 
     abstract void ativarSkill();
+
     // get
     public String getNome() {
         return nome;

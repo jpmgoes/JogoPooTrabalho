@@ -4,12 +4,12 @@ public class Shield implements Pocoes {
 
     @Override
     public void buff(Personagem p) {
-        p.getAtributos()[1] += 20;
+        p.getAtributos()[1] += 20; // Escudo
     }
 
     @Override
     public void nerf(Personagem p) {
-        p.getAtributos()[1] -= 7;
+        p.getAtributos()[1] -= 7; // Escudo
     }
 
     @Override

@@ -1,5 +1,5 @@
 public class Guerreiro extends Personagem{
-    private int[] arr = {56, 32, 30, 6, 0, 20 }; // life, escudo, ataque , defesa, mana
+    private int[] arr = {56, 32, 30, 6, 0, 20 }; // vida, escudo, ataque , defesa, mana, powerUP
     private double power = 1.2;
 
     public Guerreiro(String nome) {

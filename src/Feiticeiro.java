@@ -1,5 +1,5 @@
 public class Feiticeiro extends Personagem{
-    private int[] arr = {36, 26, 26, 10, 50, 50 }; // life, escudo, ataque , defesa, mana
+    private int[] arr = {36, 26, 26, 10, 50, 50 }; // vida, escudo, ataque , defesa, mana, powerUP
     private double power = 1.5;
 
     public Feiticeiro(String nome) {
