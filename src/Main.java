@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 public class Main {
     static void mostrandoCompetidores(ArrayList<Personagem> competidores){
         if (competidores.size() == 0) {
@@ -34,11 +35,16 @@ public class Main {
             arrNomes.add(p.getName());
         return arrNomes;
     }
-    static ArrayList<Personagem> deadFilter(ArrayList<Personagem> competidores){
+    static int deadIndex(ArrayList<Personagem> competidores){
         ArrayList<Personagem> clone = new ArrayList<>();
-        for ( Personagem p : competidores){
-            if (p.getAtributos()[0] > 0) clone.add(p);
+        for(int i = 0; i < competidores.size(); i++){
+            if (competidores.get(i).getAtributos()[0] <= 0) return i;
         }
+        return -1;
+    }
+    static ArrayList<Personagem> cloneArrPersonagem(ArrayList<Personagem> competidores){
+        ArrayList<Personagem> clone = new ArrayList<>();
+        for (Personagem p : competidores) clone.add(p);
         return clone;
     }
     static ArrayList<Integer> sorteio(ArrayList<Personagem> selecionados){
@@ -70,7 +76,7 @@ public class Main {
                     System.out.println("Todos os Atuais Selecionados");
                     mostrandoCompetidores(selecionados);
                     System.out.println("Quem você quer atacar?");
-                    String s = new Scanner(System.in).next();
+                    String s = new Scanner(System.in).nextLine();
                     ArrayList<String> arrNomeComp = competidoresNome(selecionados);
                     if (arrNomeComp.contains(s)) {
                         int index = arrNomeComp.indexOf(s);
@@ -87,7 +93,7 @@ public class Main {
                         System.out.println("Todos os Atuais Selecionados");
                         mostrandoCompetidores(selecionados);
                         System.out.println("Quem você quer atacar?");
-                        String s = new Scanner(System.in).next();
+                        String s = new Scanner(System.in).nextLine();
                         ArrayList<String> arrNomeComp = competidoresNome(selecionados);
                         if (arrNomeComp.contains(s)) {
                             int index = arrNomeComp.indexOf(s);
@@ -121,7 +127,7 @@ public class Main {
                                 "Heal", "Shield", "Strength", "Mana"));
                         boolean loop = false;
                         do {
-                            String item = new Scanner(System.in).next();
+                            String item = new Scanner(System.in).nextLine();
                             if (!arrItensNomes.contains(item)) {
                                 System.out.println("Digite o nome Correto!");
                                 loop = true;
@@ -151,7 +157,9 @@ public class Main {
             }
         }
     }
-    static void iniciarPartida(ArrayList<Personagem> selecionados){
+    static ArrayList<Personagem> iniciarPartida(ArrayList<Personagem> selecionados){
+        ArrayList<Personagem> arrClone = cloneArrPersonagem(selecionados);
+        if (selecionados.size() == 0) return selecionados;
         System.out.println("Jogadores Selecionados:");
         ArrayList<Integer> sort = sorteio(selecionados);
         System.out.println("Resultado do sorteio:");
@@ -162,16 +170,33 @@ public class Main {
         while (selecionados.size() > 1){
             if (c % selecionados.size() == 0) c = 0;
             System.out.println("Round: "+round);
-            Personagem vezDo = selecionados.get(sort.get(c++));
+
+            int index = deadIndex(selecionados);
+
+            if (index > -1) {
+                int novoIndex = arrClone.indexOf(selecionados.get(index));
+                selecionados.remove(index);
+                sort.remove(sort.indexOf(novoIndex));
+            }
+            if (c % selecionados.size() == 0) c = 0;
+            if (selecionados.size() == 1) break;
+
+            int indexDaVez = sort.indexOf(sort.get(c));
+            Personagem vezDo = selecionados.get(indexDaVez);
+
             System.out.println("Vez do "+vezDo.getNome());
             vezFazer(vezDo, selecionados, round);
-            selecionados = deadFilter(selecionados);
+
             round++;
+            c++;
         }
         System.out.println("++++++++++++++++++++++++++++++++++");
         System.out.println("O ganhador é o Competidor: "+selecionados.get(0).getNome());
         System.out.println("++++++++++++++++++++++++++++++++++");
         System.out.println(selecionados.get(0).info());
+        selecionados.get(0).setAtributos(selecionados.get(0).getAtributosRecover());
+        selecionados.get(0).setInventario(new ArrayList<>());
+        return selecionados;
     }
     static ArrayList<Personagem> selecionar(ArrayList<Personagem> competidores){
         ArrayList<Personagem> selecionados = new ArrayList<>();
@@ -181,7 +206,7 @@ public class Main {
             mostrandoCompetidores(competidores);
             ArrayList<String> arrNomesSelecionados = competidoresNome(selecionados);
             System.out.println("Selecione os Personagens");
-            String nome = new Scanner(System.in).next();
+            String nome = new Scanner(System.in).nextLine();
             if (arrNomesSelecionados.contains(nome)){
                 System.out.println("Esse competidor já foi adicionado!");
             } else if(arrNomes.contains(nome)){
@@ -197,11 +222,11 @@ public class Main {
                 System.out.println("Atuais Selecinados para Partida");
                 mostrandoCompetidores(selecionados);
                 System.out.println("Para finalizar digite \"f\".");
-                String finish = new Scanner(System.in).next().toLowerCase();
+                String finish = new Scanner(System.in).nextLine().toLowerCase();
                 if ("f".equals(finish)) return selecionados;
             }
             System.out.println("Para sair sem Selecionar Competidor digite \"s\" sem as aspas.");
-            String cancel = new Scanner(System.in).next().toLowerCase();
+            String cancel = new Scanner(System.in).nextLine().toLowerCase();
             if ("s".equals(cancel)){
                 selecionados.clear();
                 return selecionados;
@@ -222,12 +247,14 @@ public class Main {
                                "3 - Feiticeiro");
             try{
                 int input = new Scanner(System.in).nextInt();
-                System.out.println("Os Nomes não podem ter espaços!");
-                System.out.println("Digite um nome:");
+                if (input < 4 && input > 0){
+                    System.out.println("Os Nomes não podem ter espaços!");
+                    System.out.println("Digite um nome:");
+                }
                 ArrayList<String> arrNomes = competidoresNome(competidores);
                 switch (input){
                     case 1:
-                        String nomeG = new Scanner(System.in).next();
+                        String nomeG = new Scanner(System.in).nextLine();
                         Guerreiro g = new Guerreiro(nomeG);
                         if (arrNomes.contains(nomeG)){
                             System.out.println("Já existe alguem com esse nome");
@@ -236,7 +263,7 @@ public class Main {
                         competidores.add(g);
                         break;
                     case 2:
-                        String nomeA = new Scanner(System.in).next();
+                        String nomeA = new Scanner(System.in).nextLine();
                         Arqueiro a = new Arqueiro(nomeA);
                         if (arrNomes.contains(nomeA)){
                             System.out.println("Já existe alguem com esse nome");
@@ -245,7 +272,7 @@ public class Main {
                         competidores.add(a);
                         break;
                     case 3:
-                        String nomeF = new Scanner(System.in).next();
+                        String nomeF = new Scanner(System.in).nextLine();
                         Feiticeiro f = new Feiticeiro(nomeF);
                         if (arrNomes.contains(nomeF)){
                             System.out.println("Já existe alguem com esse nome");
@@ -255,14 +282,15 @@ public class Main {
                         break;
                     default:
                         System.out.println("Escolhar uma das opções do menu");
+                        continue;
                 }
                 if (competidores.size() > 1){
                     System.out.println("Se deseja Finalizar aperte \"f\" sem aspas");
-                    String finalizar = new Scanner(System.in).next();
+                    String finalizar = new Scanner(System.in).nextLine();
                     if ("f".equals(finalizar)) return competidores;
                 }
                 System.out.println("Para sair sem adicionar Competidor aperte \"s\" sem aspas");
-                String sair = new Scanner(System.in).next();
+                String sair = new Scanner(System.in).nextLine();
                 if ("s".equals(sair)){
                     competidores.clear();
                     return competidores;
@@ -281,11 +309,11 @@ public class Main {
         System.out.println("Todos os competidores:");
         mostrandoCompetidores(competidores);
         System.out.println("Digite o Nome daquele que você quer alterar o nome");
-        String p = new Scanner(System.in).next();
+        String p = new Scanner(System.in).nextLine();
         ArrayList<String> nomeComp = competidoresNome(competidores);
         if (nomeComp.contains(p)){
             System.out.println("Digite o novo nome dele:");
-            String nome = new Scanner(System.in).next();
+            String nome = new Scanner(System.in).nextLine();
             if (competidores.get(0).getCompetidores().contains(nome)){
                 System.out.println("Alguém já usa esse nome!");
             }else{
@@ -293,6 +321,51 @@ public class Main {
                 competidores.get(index).setNome(nome);
             }
         }else System.out.println("Não existe nenhum competidor com esse nome!");
+    }
+    static void salvar(ArrayList<Personagem> competidores) throws IOException {
+        File save = new File("save.txt");
+        save.delete();
+        FileWriter fw;
+        try {
+            fw = new FileWriter(save, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (int i = 0; i < competidores.size(); i++) {
+                bw.write(competidores.get(i).getNome());
+                bw.newLine();
+                bw.write(competidores.get(i).getClass().toString());
+                bw.newLine();
+            }
+            bw.close();
+            fw.close();
+            System.out.println("Jogo Salvo com Sucesso");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    static ArrayList<Personagem> carregarSave() throws FileNotFoundException {
+        ArrayList<Personagem> competidores = new ArrayList<>();
+        try{
+            FileReader fr = new FileReader("save.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String nome = "";
+            String classe = "";
+            while (true){
+                nome = br.readLine();
+                classe = br.readLine();
+                if(classe == null) break;
+                if (classe.equals("class Guerreiro")) competidores.add(new Guerreiro(nome));
+                else if (classe.equals("class Arqueiro")) competidores.add(new Arqueiro(nome));
+                else if (classe.equals("class Feiticeiro")) competidores.add(new Feiticeiro(nome));
+            }
+            br.close();
+            fr.close();
+            System.out.println("Save foi Carregado");
+        }catch (FileNotFoundException e){
+            System.out.println("Não há save!");
+        }catch (IOException e){
+            System.out.println("Erro na leitura do Save");
+        }
+        return competidores;
     }
     static void menu(){
         boolean bool = true;
@@ -305,7 +378,8 @@ public class Main {
                                "4 - Mostrar Competidores\n" +
                                "5 - Remover Competidor\n"+
                                "6 - Salvar Jogo\n" +
-                               "7 - Carregar Jogo Salvo");
+                               "7 - Carregar Jogo Salvo\n" +
+                               "8 - Sair do Jogo");
             try {
                 int s = new Scanner(System.in).nextInt();
                 switch (s){
@@ -315,7 +389,7 @@ public class Main {
                             System.out.println("Por favor crie Personagens");
                             bool = true;
                         } else{
-                            iniciarPartida(selecionar(competidores));
+                            competidores = iniciarPartida(selecionar(competidores));
                         }
                         break;
                     case 2:
@@ -337,11 +411,25 @@ public class Main {
                         System.out.println("Lista de Todos os Competidores");
                         mostrandoCompetidores(competidores);
                         System.out.println("Digite o nome daquele que você quer remover:");
-                        String nome = new Scanner(System.in).next();
+                        String nome = new Scanner(System.in).nextLine();
                         competidores = removerPersonagem(competidores, nome);
                         attCompetidores(competidores);
                         break;
                     case 6:
+                        System.out.println("Salvando...");
+                        salvar(competidores);
+                        break;
+                    case 7:
+                        System.out.println("Loading...");
+                        competidores = carregarSave();
+                        attCompetidores(competidores);
+                        break;
+                    case 8:
+                        System.out.println("Saindo do jogo...");
+                        System.out.println("Obrigado por Jogar MiddleRoyale :)");
+                        return;
+                    default:
+                        System.out.println("Digite uma das opções viáveis");
                         break;
                 }
             } catch (Exception e) {
@@ -350,7 +438,8 @@ public class Main {
             }
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        System.out.println("OBS: Os Personagens Mortos, como morreram não podem mais participar!");
         menu();
     }
 }

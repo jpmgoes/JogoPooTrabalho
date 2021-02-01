@@ -7,6 +7,7 @@ public class Guerreiro extends Personagem{
         setAtributos(this.arr);
         setPower(this.power);
         specialSkill = "Melhorar Shield";
+        atributosRecover = new int[]{56, 32, 30, 6, 0, 20};
     }
 
     @Override

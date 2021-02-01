@@ -1,0 +1,10 @@
+a
+class Guerreiro
+s
+class Arqueiro
+f
+class Feiticeiro
+g
+class Feiticeiro
+v
+class Guerreiro

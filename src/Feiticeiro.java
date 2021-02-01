@@ -7,7 +7,7 @@ public class Feiticeiro extends Personagem{
         setAtributos(this.arr);
         setPower(this.power);
         specialSkill = "Aumentar Mana";
-
+        atributosRecover = new int[]{36, 26, 26, 10, 50, 50 };
     }
 
     @Override

@@ -7,6 +7,7 @@ public class Arqueiro extends Personagem{
         setAtributos(this.arr);
         setPower(this.power);
         specialSkill = "Aumentar Vida";
+        atributosRecover = new int[]{34, 22, 32, 8, 0, 30 };
     }
 
     @Override

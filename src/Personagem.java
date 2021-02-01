@@ -6,6 +6,7 @@ public abstract class Personagem {
     private String nome;
     private int[] atributos = {0, 0, 0, 0, 0, 0 }; // vida, escudo, ataque , defesa, mana, powerUP
     private int[] atributosClone = {0, 0, 0, 0, 0, 0};
+    protected int[] atributosRecover;
     private double power;
     protected String specialSkill;
     private boolean defender = false;
@@ -44,7 +45,10 @@ public abstract class Personagem {
             p.getAtributos()[1] = 0;
             int random = new Random().nextInt(10);
             Pocoes[] arrP = {new Shield(), new Heal(), new Strength(), new Mana()};
-            if (random < 3) inventario.add(arrP[random]);
+            if (random <= 3) {
+                System.out.println(arrP[random].getName()+" Adquirido!");
+                inventario.add(arrP[random]);
+            }
         }
         if(p.getAtributos()[0] <= 0) {
             System.out.println("≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥");
@@ -186,6 +190,9 @@ public abstract class Personagem {
     public String getSpecialSkill() {
         return specialSkill;
     }
+    public int[] getAtributosRecover() {
+        return atributosRecover;
+    }
 
     // set
     public void setAtributos(int[] atributos) {
@@ -205,5 +212,8 @@ public abstract class Personagem {
     }
     public void setCompetidores(ArrayList<String> competidores) {
         this.competidores = competidores;
+    }
+    public void setInventario(ArrayList<Pocoes> inventario) {
+        this.inventario = inventario;
     }
 }
