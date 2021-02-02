@@ -102,7 +102,7 @@ public abstract class Personagem {
         int ataque = getAtributos()[2];
         if(rodada%3 == 0) {
             float critico = new Random().nextFloat();
-            ataque += critico*10;
+            ataque += critico*10+1;
             System.out.println("Critical!!!");
         }
 

@@ -16,12 +16,8 @@ public class Main {
             return competidores;
         }
         int index = arrNome.indexOf(nome);
-        ArrayList<Personagem> arrCompetidores = new ArrayList<>();
-        for (int i = 0; i < competidores.size(); i++)
-            if(i != index)
-                arrCompetidores.add(competidores.get(i));
-
-        return arrCompetidores;
+        competidores.remove(index);
+        return competidores;
     }
     static ArrayList<String> competidoresNome(ArrayList<Personagem> competidores){
         ArrayList<String> arrNomes = new ArrayList<>();
