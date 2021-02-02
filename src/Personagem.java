@@ -55,6 +55,12 @@ public abstract class Personagem {
             System.out.println(p.getNome()+" Morreu!");
             System.out.println("≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥");
             p.getAtributos()[0] = 0;
+            int random = new Random().nextInt(10);
+            Pocoes[] arrP = {new Shield(), new Heal(), new Strength(), new Mana()};
+            if (random <= 3) {
+                System.out.println(arrP[random].getName()+" Adquirido!");
+                inventario.add(arrP[random]);
+            }
         }
         cloneArray();
         this.atributos = this.atributosClone;
