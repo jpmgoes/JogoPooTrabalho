@@ -155,7 +155,7 @@ public abstract class Personagem {
 
     void ativarItem(String s){
         for (Pocoes p:getInventario()){
-            if(s.equals(p.getName()){
+            if(s.equals(p.getName())){
                 p.active(this);
                 int index = this.inventario.indexOf(p);
                 this.inventario = removeItem(this.inventario, index);
