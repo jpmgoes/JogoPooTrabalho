@@ -74,7 +74,7 @@ public abstract class Personagem {
                 "Ataque: "+getAtributos()[2]+"\n"+
                 "Defesa: "+getAtributos()[3]+"\n"+
                 "Mana: "+getAtributos()[4]+"\n"+
-                "PowerUP: "+getAtributos()[5]+"%");
+                "PowerUP: "+getAtributos()[5]+"%\n");
     }
 
     void powerUP(){
@@ -154,7 +154,7 @@ public abstract class Personagem {
     }
 
     void ativarItem(String s){
-        for (Pocoes p: this.inventario){
+        for (s.equals(p.getName())){
             if(s == p.getName()){
                 p.active(this);
                 int index = this.inventario.indexOf(p);
