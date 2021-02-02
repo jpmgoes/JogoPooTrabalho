@@ -43,12 +43,6 @@ public abstract class Personagem {
         if (p.getAtributos()[1] < 0) {
             p.getAtributos()[0] += p.getAtributos()[1];
             p.getAtributos()[1] = 0;
-            int random = new Random().nextInt(10);
-            Pocoes[] arrP = {new Shield(), new Heal(), new Strength(), new Mana()};
-            if (random <= 3) {
-                System.out.println(arrP[random].getName()+" Adquirido!");
-                inventario.add(arrP[random]);
-            }
         }
         if(p.getAtributos()[0] <= 0) {
             System.out.println("≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥≤≥");
